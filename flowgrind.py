@@ -19,14 +19,15 @@ CLIENT_DATA_IP = "10.0.0.1"
 CLIENT_CTL_IP = "192.168.1.101"
 SERVER_DATA_IP = "10.0.0.2"
 SERVER_CTL_IP = "192.168.1.102"
-S2C_CCA = "bbr"
+S2C_CCA = "reno"
 S2C2_CCA = "cubic"
 C2S_CCA = "cubic"
 DOWN_FLOW_DUR = 10.0
 DOWN_FLOW2_DUR = 5.0
 UP_FLOW_DUR = 5.0
 LOGFILE = "fg.log"
-NUM_FLOWS = 2
+NUM_FLOWS = 1
+REVERSE_TARGET_RATE = "50M"
 
 CLICK_ADDR = "192.168.1.104"
 CLICK_PORT = 9000
@@ -72,11 +73,17 @@ def collectQueueStat(elem, csvname):
         writer.writerow(['time(sec)', 'qlen'])
         writer.writerows(qlen_array)
 
+def run_reverse_iperf(delay, duration, report_interval):
+    command_client = f"ssh {CLIENT_CTL_IP} 'iperf -c {SERVER_DATA_IP} -i {report_interval} --udp -b {REVERSE_TARGET_RATE} -t {duration}' > iperf_reverse.txt"
+    time.wait(delay)
+    os.system(command_client)
+
 if __name__ == "__main__":
     fg = Process(target=runFlowgrind)
     qstat_down = Process(target=collectQueueStat, args=(DOWNQ,'downq.csv',))
     qstat_up = Process(target=collectQueueStat, args=(UPQ,'upq.csv',))
-    for p in [fg, qstat_down, qstat_up]:
+    reverse_iperf = Process(target = run_reverse_iperf, args = (6.0, 14, 1))
+    for p in [fg, qstat_down, qstat_up, reverse_iperf]:
         p.start()
-    for p in [fg, qstat_down, qstat_up]:
+    for p in [fg, qstat_down, qstat_up, reverse_iperf]:
         p.join()
