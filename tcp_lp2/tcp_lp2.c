@@ -173,6 +173,7 @@ static u32 tcp_lp_owd_calculator(struct sock *sk)
 		owd =
 		    tp->rx_opt.rcv_tsval * (LP_RESOL / lp->remote_hz) -
 		    tp->rx_opt.rcv_tsecr * (LP_RESOL / TCP_TS_HZ);
+		printk("TCP LP OWD: %lld\n", owd);
 		if (owd < 0)
 			owd = -owd;
 	}
