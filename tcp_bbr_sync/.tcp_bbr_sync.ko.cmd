@@ -1,0 +1,1 @@
+cmd_/home/skalasib/CloudGaming-CCA/CCA/tcp_bbr_sync/tcp_bbr_sync.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/skalasib/CloudGaming-CCA/CCA/tcp_bbr_sync/tcp_bbr_sync.ko /home/skalasib/CloudGaming-CCA/CCA/tcp_bbr_sync/tcp_bbr_sync.o /home/skalasib/CloudGaming-CCA/CCA/tcp_bbr_sync/tcp_bbr_sync.mod.o;  true

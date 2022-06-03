@@ -1,0 +1,1 @@
+cmd_/home/skalasib/CloudGaming-CCA/CCA/tcp_lp2/tcp_lp2.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/skalasib/CloudGaming-CCA/CCA/tcp_lp2/tcp_lp2.ko /home/skalasib/CloudGaming-CCA/CCA/tcp_lp2/tcp_lp2.o /home/skalasib/CloudGaming-CCA/CCA/tcp_lp2/tcp_lp2.mod.o;  true

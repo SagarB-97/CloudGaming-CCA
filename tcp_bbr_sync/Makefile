@@ -1,4 +1,4 @@
-obj-m := tcp_lp2.o
+obj-m := tcp_bbr_sync.o
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 default:
