@@ -17,16 +17,16 @@ from multiprocessing import Process
 from random import uniform
 
 CLIENT_DATA_IP = "10.0.0.1"
-CLIENT_CTL_IP = "128.105.145.240"
+CLIENT_CTL_IP = "192.168.1.101"
 SERVER_DATA_IP = "10.0.0.2"
-SERVER_CTL_IP = "128.105.145.242"
+SERVER_CTL_IP = "192.168.1.102"
 S2C_CCA = "bbr"
 DOWN_FLOW_DUR = 60.0
 MAX_WAIT_DUR = 5.0
 LOGFILE = "fg.log"
-NUM_FLOWS = 2
+NUM_FLOWS = 10
 
-QUEUE_LOG = True
+QUEUE_LOG = False
 CLICK_ADDR = "127.0.0.1"
 CLICK_PORT = 9000
 UPQ = 'ohMyBtl/upq'
@@ -35,16 +35,17 @@ HANDLER = 'length'
 POLL_INTERVAL_S = 0.005
 
 def runFlowgrind():
-    base_params = f"-i 0.01 -n {NUM_FLOWS} -I"
+    base_params = f"-i 0.1 -n {NUM_FLOWS} -I"
     for fid in range(NUM_FLOWS):
         RAND_WAIT = uniform(0, MAX_WAIT_DUR)
         FLOW_DUR = DOWN_FLOW_DUR - RAND_WAIT
-        CTRL_PORT = 6000 + fid % 2 + 1
+        #CTRL_PORT = 6000 + fid % 2 + 1
+        CTRL_PORT = 6001
         base_params += (f" -F {fid} -Y s={RAND_WAIT} -T s={FLOW_DUR} "
                         f"-O s=TCP_CONGESTION={S2C_CCA} "
                         f"-H s={SERVER_DATA_IP}/{SERVER_CTL_IP}:{CTRL_PORT},"
                         f"d={CLIENT_DATA_IP}/{CLIENT_CTL_IP}:{CTRL_PORT}")
-    output_param = f" 2>&1 | tee {LOGFILE}"
+    output_param = f" 2>&1 | tee {LOGFILE} 1>/dev/null"
     os.system("flowgrind " + base_params + output_param)
 
 def collectQueueStat(elem, csvname):
